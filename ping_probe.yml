@@ -30,3 +30,4 @@
       responseList: "{{ ping_output.results }}"
       probe_name: "{{ lookup('env', 'probeName') }}"
       probe_location: "{{ lookup('env', 'probeLocation') }}"
+...
