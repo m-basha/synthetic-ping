@@ -1,0 +1,4 @@
+probe_name,probe_location,host,packets_tx,packets_rx,rtt_min,rtt_max,rtt_avg,packet_lossPerc%
+{% for i in (responseList) %}
+{{ probe_name }},{{ probe_location }},{{ i.item }},{{ i.packets_tx }},{{ i.packets_rx }},{{ i.rtt.min }},{{ i.rtt.max }},{{ i.rtt.avg }},{{ i.packet_loss }}
+{% endfor %}

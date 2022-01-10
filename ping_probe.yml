@@ -1,0 +1,45 @@
+---
+- name: Ping Test Play
+  hosts: localhost
+  #connection: local
+  gather_facts: no
+  tasks:
+  - name: Get Hosts List
+    tags: first
+    set_fact:
+      hosts_list: "{{ hosts.split(' ') }}"
+
+  - name: Ping
+    tags: first
+    icmp_ping: 
+      dest: "{{ item }}"
+      count: 10
+      interval: 1 
+      size: 56
+      ttl: 64
+    with_items:
+      - "{{ hosts_list }}"
+    register: ping_output
+
+  - name: debug
+    tags: first
+    debug:
+      var: ping_output.results[0] 
+
+  - name: Render Ping Template
+    tags: second
+    delegate_to: localhost
+    template:
+      src: templates/ping_template_loop.j2
+      dest: ping_results_loop.csv
+    vars:
+      responseList: "{{ ping_output.results }}"
+
+- name: Copy CSV File To UPM Machine '192.168.45.45'
+  hosts: upm-convergence-testing-2
+  gather_facts: no
+  tasks:
+    - name: Copy To UPM 45.45
+      copy:
+        src: /usr/lib/cgi-bin/Synth-Test/ping_results_loop.csv
+        dest: /home/eventum/PingFileCollection

@@ -1,0 +1,1 @@
+# Synthetic Ping Using Ansible
